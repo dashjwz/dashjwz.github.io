@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>golang on Dashjay&#39;s</title>
+    <link>/categories/golang/</link>
+    <description>Recent content in golang on Dashjay&#39;s</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 03 Dec 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/golang/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>基于Websocket的消息传输系统</title>
+      <link>/post/2019/12/03/websocket/</link>
+      <pubDate>Tue, 03 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/12/03/websocket/</guid>
+      <description>丑话说前面，本人就是LJ本科生，水平没多高，大多数代码源自其他项目，比如一个叫leaf的游戏框架。
+leafgithub.com
+但是作为普通的穷苦人民，在上面催你的时候，很难静下新来，慢慢的打开vscode去一行一行的看，比如你现在可能就是在火急火燎的想在知乎上寻求一个解决方案。
+先说一下我的使用场景。我的场景是这样：
+用户会登陆软件后，需要一些认证方法，连接上socket，然后会进行高速传输，比如消息、群消息、交易拍卖、其他等等一系列消息，主体就是用户，客体是其他用户或者服务器。
+架构 我现对整个项目架构描述一下
+先简述一下Hub的设计，总的一个Hub包含Client这样一个map用来储存连接信息，然后每个连接有一个Reader和一个Write来从客户端读取和写入客户端。
+按照图中标志，按实际执行顺序来讲
+①. 客户端向服务端发起Socket连接，（服务器识别到这是Socket连接之后有个Upgrade操作），这里不太明白的可以去看看Socket连接的过程，并不复杂。
+③. Reader收到的第一条消息，是注册消息，一般又客户端OnConnect的时候发送，一般会携带认证信息进行身份认证。
+②. 认证成功之后服务器应该返回用户类似于JWT或者SessionCookie类的东西，或者没有也没关系，因为每次重新创建连接都要认证，我用JWT是为了做访问控制。
+ 如果没有其他异常：就会一直处在①、②、①、②&amp;hellip;&amp;hellip;这样的收发状态。直到&amp;hellip;&amp;hellip;.
+ ④. 注销，一旦客户端退出或者网络中断等异常，就会出现断开。
+好了讲了整个东西架构，让我们来看看怎么实现的把，showcode时间到了。
+实现 首先，让我们来看看hub的结构吧，说结构还真的就是结构
+// 整个项目的交流系统，由clients和各种不同的chan组成， type Hub struct { Clients map[*Client]bool // 储存保持连接的用户 	UserToClient map[string]*Client // 获得用户和其连接的对应关系 	Message chan []byte // 广播消息队列 	Register chan *Client // 发起注册请求的队列 	Unregister chan *Client // 断开连接的队列 } 注释讲的比较清楚了，我中间使用UserToClient这个map来方便找到我们的Client而已，
+ 注意，Client我们存的是指针，因此在这里并没有冗余，我只是为了方便找用户，而且不用再遍历。
+ 这里大家有没有注意到一个好玩的东西叫做chan ，这个东西在C/C++里叫做pipe，但是我个人觉得在go里爽的不止那么一点点，有这个东西，我的思路清晰多了。
+ 我在这里插入一个操作系统中生产者消费者的例子，如果觉得没啥好玩的可以跳过。
+ package main import ( &amp;#34;fmt&amp;#34; &amp;#34;time&amp;#34; ) func produce(p chan&amp;lt;- int) { for i := 0; i &amp;lt; 1000; i++ { p &amp;lt;- i fmt.</description>
+    </item>
+    
+  </channel>
+</rss>

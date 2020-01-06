@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>使用modelsim_ase &#43; flask实现了一个测评沙箱 | Dashjay&#39;s</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="/css/theme-override.css">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.css" integrity="sha384-D+9gmBxUQogRLqvARvNLmA9hS2x//eK1FhVb9PiU86gmcrBrJAQT8okdJ4LMp2uv" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.js" integrity="sha384-483A6DwYfKeDa0Q52fJmxFXkcPCFfnXMoXblOkJ4JcA8zATN6Tm78UNL72AKk+0O" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/contrib/auto-render.min.js" integrity="sha384-yACMu8JWxKzSp/C1YV86pzGiQ/l1YUfE8oPuahJQxzehAjEt2GiQuy/BIvl9KyeF" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body);
+        });
+    </script>
+
+<header>
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">/home/dashjay&#39;s</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">~/home</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">~/categories</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/subscribe</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">使用modelsim_ase + flask实现了一个测评沙箱</span></h1>
+<h2 class="author">Dashjay</h2>
+<h2 class="date">2019/09/02</h2>
+<p class="terms">
+  
+  
+  
+  
+  Tags: <a href="/tags/verilog">verilog</a> <a href="/tags/oj">OJ</a> 
+  
+  
+</p>
+</div>
+
+
+
+<main>
+<p>二话不说先甩上Github连接
+<a href="https://github.com/dashjay/Verilog-Judge-USTB">Verilog-Judge-USTB</a></p>
+<h1 id="verilog-judge-ustb">Verilog-Judge-USTB</h1>
+<p>来自北京科技大学某小组的一个verilog的评测沙箱，基于Flask编写</p>
+<p>A verilog online judger from USTB, based on Flask-python</p>
+<h3 id="usage">Usage</h3>
+<p><strong>构建</strong>(build)</p>
+<pre><code>git clone https://github.com/dashjay/Verilog-Judge-USTB.git
+cd Verilog-Judge-USTB
+docker build . -t verilog-judge
+</code></pre><p><strong>运行</strong>(run)</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run verilog-judge -v ./modelsim_ase:/root/modelsim_ase -p 33778:5000
+</code></pre></div><p><a href="http://114.55.92.2:1081/index.php?share/file&amp;user=1&amp;sid=upvg35qf">Modelsim_ase</a></p>
+<p>以上是modelsim的下载地址</p>
+<p><code>MD5 (modelsim_ase.7z) = 69a73347f20b1535db67de68e7dd538d</code></p>
+<p><code>size:186M</code></p>
+<p>解压后大小1.6GB</p>
+<blockquote>
+<p>内部指定的modelsim_ase来自FPGA微软的免费软件Quartus Lite 中的modelsim组件</p>
+<p>docker内部运行的端口是5000，开在外部</p>
+</blockquote>
+<p><strong>测试</strong>(test)</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">chmod +x test.sh
+python test.py | python -m json.tool
+</code></pre></div><hr>
+<blockquote>
+<p>以下是测试输出</p>
+<p>The following is the test output</p>
+</blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+    <span style="color:#f92672">&#34;cmpcode&#34;</span>: <span style="color:#ae81ff">1</span>,
+    <span style="color:#f92672">&#34;cmpresult&#34;</span>: <span style="color:#e6db74">&#34;Start time: 07:46:33 on Sep 02,2019\nvlog top_module.v \nModel Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016\n-- Compiling module top_module\n\nTop level modules:\n\ttop_module\nEnd time: 07:46:34 on Sep 02,2019, Elapsed time: 0:00:01\nErrors: 0, Warnings: 0\n&#34;</span>,
+    <span style="color:#f92672">&#34;signal&#34;</span>: <span style="color:#e6db74">&#34;{\&#34;signal\&#34;:[{\&#34;name\&#34;:\&#34;a\&#34;,\&#34;wave\&#34;:\&#34;==========\&#34;,\&#34;data\&#34;:[\&#34;/top_module/i\&#34;,\&#34;8\&#34;,\&#34;8\&#34;,\&#34;8\&#34;,\&#34;8\&#34;,\&#34;8\&#34;]},{\&#34;name\&#34;:\&#34;b\&#34;,\&#34;wave\&#34;:\&#34;==========\&#34;,\&#34;data\&#34;:[\&#34;a\&#34;,\&#34;a\&#34;,\&#34;2\&#34;,\&#34;3\&#34;,\&#34;4\&#34;]},{\&#34;name\&#34;:\&#34;p\&#34;,\&#34;wave\&#34;:\&#34;==========\&#34;,\&#34;data\&#34;:[\&#34;xx\&#34;,\&#34;50\&#34;,\&#34;10\&#34;,\&#34;18\&#34;,\&#34;20\&#34;]}]}\n&#34;</span>,
+    <span style="color:#f92672">&#34;status&#34;</span>: <span style="color:#ae81ff">1</span>
+}
+</code></pre></div><p>参数表</p>
+<table>
+<thead>
+<tr>
+<th>参数(parameter)</th>
+<th>值(value)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>top_module</td>
+<td>top_module.v字符串形式传送</td>
+</tr>
+<tr>
+<td>stim</td>
+<td>stim.v 激励文件字符串形式传送</td>
+</tr>
+</tbody>
+</table>
+<h3 id="thanks">thanks</h3>
+<p><a href="https://github.com/orgs/806Cypher/people/Explainaur">Explainaur</a> 编写了最复杂的shell脚本</p>
+<p>在下只写了点破Web服务并且测试了一下</p>
+<blockquote>
+<p>看下另一篇文章[使用Modelsim中的CommandTools 进行仿真]可以了解其背后的工作原理</p>
+</blockquote>
+
+</main>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Open-Source | <a href="https://github.com/goodroot/hugo-classic">Github</a>
+      
+    </footer>
+  </body>
+</html>
+

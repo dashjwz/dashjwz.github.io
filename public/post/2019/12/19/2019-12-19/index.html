@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>2019-12-19周报 - MongoDB大发现 | Dashjay&#39;s</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="/css/theme-override.css">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.css" integrity="sha384-D+9gmBxUQogRLqvARvNLmA9hS2x//eK1FhVb9PiU86gmcrBrJAQT8okdJ4LMp2uv" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.js" integrity="sha384-483A6DwYfKeDa0Q52fJmxFXkcPCFfnXMoXblOkJ4JcA8zATN6Tm78UNL72AKk+0O" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/contrib/auto-render.min.js" integrity="sha384-yACMu8JWxKzSp/C1YV86pzGiQ/l1YUfE8oPuahJQxzehAjEt2GiQuy/BIvl9KyeF" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body);
+        });
+    </script>
+
+<header>
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">/home/dashjay&#39;s</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">~/home</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">~/categories</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/subscribe</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">2019-12-19周报 - MongoDB大发现</span></h1>
+<h2 class="author">dashjay</h2>
+<h2 class="date">2019/12/19</h2>
+<p class="terms">
+  
+  
+  
+  
+  
+</p>
+</div>
+
+
+
+<main>
+<p>为什么博客里突然冲出来一个周报呢，别问，问就是不知道。</p>
+<p>这周干了啥：</p>
+<h4 id="nodebb-mongodb">nodebb MongoDB数据库</h4>
+<p>看了nodebb对应的MongoDB的后台数据库结构。发现他分为三个库。</p>
+<ul>
+<li>session</li>
+<li>object</li>
+<li>&amp;&amp;&amp;忘了</li>
+</ul>
+<p>其中所有静态内容都存在object这个库中。</p>
+<blockquote>
+<p>我发现他有个特点，这个特点有点像css，我在这里尝试描述一下，看是否描述的清楚。</p>
+</blockquote>
+<p>曾经我以为MongoDB这样用性能很好，因为可以储存非固定结构的内容，我之前的结构是这样的</p>
+<pre><code>{
+问题信息:blabalba,
+回答:[
+    {回答信息：blablabal,评论:[{评论信息....}]},
+  ]
+}
+</code></pre><p>我始终以为MongoDB就是这么用的，知道我看了nodebb。他尝试以最小单元来储存，这才让我突然意识到，经常更改的时候回容易发生信息不一致。他是这么存的</p>
+<pre><code>// 问题
+{
+qid:1,
+问题信息:blablabal
+}
+// 回答
+{
+aid:1,
+to_qid:1,
+答案信息:blabalbal
+}
+// 评论
+{
+cid:1,
+to_aid:1
+to_qid:1
+评论内容:blabalbal
+}
+</code></pre><p>他这样存的时候修改的时候只需要修改单元即可，这种叠层式的储存还体现在下方特点。</p>
+<pre><code>{
+key:&quot;qid:1:like_byuid&quot;,
+member:[
+1,2,3,4
+  ]
+}
+</code></pre><p>他这样储存乍一看有很多问题，比如当点赞人数非常多的话，每次添加一个点赞非常困难。但是相对于每个点赞存一条，我觉得这个方法还是可以的。</p>
+<p>那么一条记录，将记录分为若干个[<strong>永远不变的固定部分</strong>，<strong>偶尔改变的部分</strong>，<strong>经常改变的部分</strong>]然后分开存，学到了，搭配Redis可以最好的发挥MongoDB的最大优势。</p>
+<h4 id="tab">在微信小程序处理小而复杂的下拉刷新和多tab</h4>
+<p>微信小程序本身支持下拉刷新，但是有点鸡肋，会出各种问题，因为横向会改变tab，纵向会下拉刷新，还是有点麻烦，描述清楚也有点麻烦，因此我之后再补充。</p>
+<h4 id="heading">开发计划</h4>
+<ul>
+<li>教室系统的后台强力开发</li>
+<li>小程序的信息发布系统整合</li>
+</ul>
+
+</main>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Open-Source | <a href="https://github.com/goodroot/hugo-classic">Github</a>
+      
+    </footer>
+  </body>
+</html>
+

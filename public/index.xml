@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Home on Dashjay&#39;s</title>
+    <link>/</link>
+    <description>Recent content in Home on Dashjay&#39;s</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 19 Dec 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>2019-12-19周报 - MongoDB大发现</title>
+      <link>/post/2019/12/19/2019-12-19/</link>
+      <pubDate>Thu, 19 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/12/19/2019-12-19/</guid>
+      <description>为什么博客里突然冲出来一个周报呢，别问，问就是不知道。
+这周干了啥：
+nodebb MongoDB数据库 看了nodebb对应的MongoDB的后台数据库结构。发现他分为三个库。
+ session object &amp;amp;&amp;amp;&amp;amp;忘了  其中所有静态内容都存在object这个库中。
+ 我发现他有个特点，这个特点有点像css，我在这里尝试描述一下，看是否描述的清楚。
+ 曾经我以为MongoDB这样用性能很好，因为可以储存非固定结构的内容，我之前的结构是这样的
+{ 问题信息:blabalba, 回答:[ {回答信息：blablabal,评论:[{评论信息....}]}, ] } 我始终以为MongoDB就是这么用的，知道我看了nodebb。他尝试以最小单元来储存，这才让我突然意识到，经常更改的时候回容易发生信息不一致。他是这么存的
+// 问题 { qid:1, 问题信息:blablabal } // 回答 { aid:1, to_qid:1, 答案信息:blabalbal } // 评论 { cid:1, to_aid:1 to_qid:1 评论内容:blabalbal } 他这样存的时候修改的时候只需要修改单元即可，这种叠层式的储存还体现在下方特点。
+{ key:&amp;quot;qid:1:like_byuid&amp;quot;, member:[ 1,2,3,4 ] } 他这样储存乍一看有很多问题，比如当点赞人数非常多的话，每次添加一个点赞非常困难。但是相对于每个点赞存一条，我觉得这个方法还是可以的。
+那么一条记录，将记录分为若干个[永远不变的固定部分，偶尔改变的部分，经常改变的部分]然后分开存，学到了，搭配Redis可以最好的发挥MongoDB的最大优势。
+在微信小程序处理小而复杂的下拉刷新和多tab 微信小程序本身支持下拉刷新，但是有点鸡肋，会出各种问题，因为横向会改变tab，纵向会下拉刷新，还是有点麻烦，描述清楚也有点麻烦，因此我之后再补充。
+开发计划  教室系统的后台强力开发 小程序的信息发布系统整合  </description>
+    </item>
+    
+    <item>
+      <title>Post4_Radare 使用记录</title>
+      <link>/post/2019/12/11/post4-radare/</link>
+      <pubDate>Wed, 11 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/12/11/post4-radare/</guid>
+      <description>[toc]
+报告4 选择产品：Radare2取证工具
+工具介绍 Radare是一个取证工具以及可编写脚本的命令行十六进制编辑器，可以打开磁盘文件、支持分析二进制、反汇编代码、调试程序以及连接到远程gdb服务服务器的功能，我记得我高中的时候这工具曾进过Github TOP 30，但是由于各种原因，我们平时都使用GDB，也就忽略了这个工具，看到它被定义为取证工具的时候我有点好奇，什么是计算机取证&amp;hellip;&amp;hellip;..下面贴一下man手册中r2的描述
+RADARE2(1) BSD General Commands Manual RADARE2(1) NAME radare2 -- Advanced commandline hexadecimal editor, disassembler and debugger 功能测试 众所周知GDB可以运行时（runtime）分析，但是R2只是一个静态分析的软件，让我来看看他有多强大，先分析一小段代码看看。
+这个软件集成了许多小工具，看来平时写python小工具的时代结束了，这么多附带的小工具我来介绍下。
+rax2 &amp;mdash;&amp;mdash;&amp;mdash;&amp;gt; 用于数值转换 $rax2 -s 414141 AAAA% 看下man手册介绍
+ RAX2(1) BSD General Commands Manual RAX2(1) NAME rax2 -- radare base converter DESCRIPTION This command is part of the radare project. This command allows you to convert values between positive and negative integer, float, octal, binary and hexadecimal values.</description>
+    </item>
+    
+    <item>
+      <title>基于Websocket的消息传输系统</title>
+      <link>/post/2019/12/03/websocket/</link>
+      <pubDate>Tue, 03 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/12/03/websocket/</guid>
+      <description>丑话说前面，本人就是LJ本科生，水平没多高，大多数代码源自其他项目，比如一个叫leaf的游戏框架。
+leafgithub.com
+但是作为普通的穷苦人民，在上面催你的时候，很难静下新来，慢慢的打开vscode去一行一行的看，比如你现在可能就是在火急火燎的想在知乎上寻求一个解决方案。
+先说一下我的使用场景。我的场景是这样：
+用户会登陆软件后，需要一些认证方法，连接上socket，然后会进行高速传输，比如消息、群消息、交易拍卖、其他等等一系列消息，主体就是用户，客体是其他用户或者服务器。
+架构 我现对整个项目架构描述一下
+先简述一下Hub的设计，总的一个Hub包含Client这样一个map用来储存连接信息，然后每个连接有一个Reader和一个Write来从客户端读取和写入客户端。
+按照图中标志，按实际执行顺序来讲
+①. 客户端向服务端发起Socket连接，（服务器识别到这是Socket连接之后有个Upgrade操作），这里不太明白的可以去看看Socket连接的过程，并不复杂。
+③. Reader收到的第一条消息，是注册消息，一般又客户端OnConnect的时候发送，一般会携带认证信息进行身份认证。
+②. 认证成功之后服务器应该返回用户类似于JWT或者SessionCookie类的东西，或者没有也没关系，因为每次重新创建连接都要认证，我用JWT是为了做访问控制。
+ 如果没有其他异常：就会一直处在①、②、①、②&amp;hellip;&amp;hellip;这样的收发状态。直到&amp;hellip;&amp;hellip;.
+ ④. 注销，一旦客户端退出或者网络中断等异常，就会出现断开。
+好了讲了整个东西架构，让我们来看看怎么实现的把，showcode时间到了。
+实现 首先，让我们来看看hub的结构吧，说结构还真的就是结构
+// 整个项目的交流系统，由clients和各种不同的chan组成， type Hub struct { Clients map[*Client]bool // 储存保持连接的用户 	UserToClient map[string]*Client // 获得用户和其连接的对应关系 	Message chan []byte // 广播消息队列 	Register chan *Client // 发起注册请求的队列 	Unregister chan *Client // 断开连接的队列 } 注释讲的比较清楚了，我中间使用UserToClient这个map来方便找到我们的Client而已，
+ 注意，Client我们存的是指针，因此在这里并没有冗余，我只是为了方便找用户，而且不用再遍历。
+ 这里大家有没有注意到一个好玩的东西叫做chan ，这个东西在C/C++里叫做pipe，但是我个人觉得在go里爽的不止那么一点点，有这个东西，我的思路清晰多了。
+ 我在这里插入一个操作系统中生产者消费者的例子，如果觉得没啥好玩的可以跳过。
+ package main import ( &amp;#34;fmt&amp;#34; &amp;#34;time&amp;#34; ) func produce(p chan&amp;lt;- int) { for i := 0; i &amp;lt; 1000; i++ { p &amp;lt;- i fmt.</description>
+    </item>
+    
+    <item>
+      <title>本科生谈论汇编</title>
+      <link>/post/2019/12/03/%E6%9C%AC%E7%A7%91%E7%94%9F%E8%B0%88%E8%AE%BA%E6%B1%87%E7%BC%96/</link>
+      <pubDate>Tue, 03 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/12/03/%E6%9C%AC%E7%A7%91%E7%94%9F%E8%B0%88%E8%AE%BA%E6%B1%87%E7%BC%96/</guid>
+      <description>前言
+本文旨在带领你快速了解汇编的特点以及程序运行的基本过程,让你体验专业而粗暴的攻击方式.当初很多人想做hacker就报了计算机专业,结果技能树点错了,成了程序员.做为一个CTF选手,我偶尔玩pwn&amp;ndash;即漏洞利用部分,接下来带你体验二进制攻击.下面我们简单介绍一下你需要了解哪些知识.
+ 汇编基础 基本逆向工程 简单调试技巧 函数运行时栈的构造与内存分布 基本Linux基础 缓冲区溢出漏洞利用   本文将对比x86与x86-64程序,即32位与64位,主流机器大部分运行64位程序,但32程序运行的原理十分重要(主要体现在函数调用部分)
+ 建议阅读的资料: - 汇编语言(王爽) - 此书主要介绍8086汇编,虽然8086已经淘汰,但是对理解计算机驱动层十分有益,笔者花了15天读完,建议阅读
+- 深入理解计算机系统
+本书为卡内基梅隆大学教材,内容之精妙无法描述orz,全书732页笔者读了一半,打算多刷几遍,强推!!!
+- 程序员的自我修养
+听名字像是颈椎病康复指南之类的书,实际上讲的是编译时链接装载的过程,硬核玩家必看
+- SICP
+曲老师大为赞赏了这本书!!!
+ 汇编基础 闲谈 汇编是逆向工程的基础,许多人都希望能够破解软件,制作游戏外挂,不花钱冲会员等等,这都属于逆向工程的范畴.逆向工程就是在只有二进制文件的时候,我通过反汇编的手段来从二进制文件获得汇编代码,进而对汇编代码进行反编译得到类C的高级语言,以辅助我们了解程序逻辑,挖掘程序漏洞.
+同时,逆向工程是学习C/C++最好的途径.C系语言本就是为了开发Unix而生,因此他完美的契合Unix生态,因此在Linux下你可以轻易的获得一个程序的指令码(opcode),汇编代码,以及未链接的目标文件.而你学到现在可能都不知道main函数有三个参数,为什么main函数一定要写return 0;(虽然你不写,但这是十分差劲的习惯).只有通过阅读汇编代码你才能真正理解程序的运行原理,你才能真正的理解编译的的高明之处,你才能真正领略到前人的伟大智慧.我强烈建议同学们安装ubuntu18.04虚拟机进行实验,这样你才能获得最好的体验.
+我知道现在流行一种歪风邪气,由于互联网市场膨胀,资本大量流入,大量公司需求网站开发与移动端开发.因此一些学生急功近利,认为自己会写几行php,套个框架,api倒背如流,就算编程大牛了.认为自己会写几行python java,调一调库,用一用flask spring搭个网站,整天拿一些现有的库高谈扩论,写一些业务逻辑,搞几个微信小程序就算是高级程序员了.反而嘲笑C/C++老掉牙,内心浮躁而不愿了解底层,这本身就是一种自欺欺人.多数人由于畏难心理而拒绝C++,只推崇语法糖更加简单的python.作为计算机科学研究人员,我们决不能满足于只写一些应用层逻辑,只有真正了解了计算机的细节,我们才能成为大师,否则你与专科培训班的学生有什么区别.
+但是，我其实就是上方这段说的这种人，就这样吧，逃。
+从Hello_world开始 你向家里的弟弟妹妹炫耀你的编程技巧时,你可能写过无数次Hello_world来骗他们了,也许你自认为对它十分熟悉,下面我们从头看看到底发生了什么. 首先你会熟练的写一个hello.c:
+#include&amp;lt;stdio.h&amp;gt;int main(int argc, char *argv[], char *envp[]){ printf(&amp;#34;Hello World!&amp;#34;); return 0; } 或许你在dev-c++里熟练的按下F11,不过在linux终端里,我们使用GNU开源编译器gcc进行编译,命令如下:
+&amp;gt; gcc -o hello hello.c 在这里,gcc驱动程序读取源程序文件hello.c,并把它翻译成一个可执行的二进制文件,这个翻译过程可分为四个阶段,如下图.这四个阶段的程序(预处理器 编译器 汇编器 链接器)构成了编译系统(Compilation System)
+预处理阶段: 预处理器(cpp)根据一字符#开头的命令修改原始C程序.比如hello.c的第一行#include命令告诉预处理器读取系统头文件stdio.h的内容,并把它直接插入文本程序中.结果就的到了另一个C程序,通常以&amp;rdquo;.i&amp;quot;作为后缀.
+ 编译阶段: 编译器(ccl)将文本文件hello.i翻译成文本文件hello.s,他包含一个汇编程序,该程序的main函数定义,如下:  main: subq $8, %rsp movl $.</description>
+    </item>
+    
+    <item>
+      <title>How To Understand Cross Entropy</title>
+      <link>/post/2019/11/11/how-to-understand-cross-entropy/</link>
+      <pubDate>Mon, 11 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/11/11/how-to-understand-cross-entropy/</guid>
+      <description>机缘巧合看到交叉熵之后觉得非常神奇 反复看代码没搞懂在干什么，因此找了本机器学习的书希望能够理解这个玩意儿
+ 除了均方误差之外，交叉熵误差也被用于损失函数，公式如下
+ $$ E = - \sum_k{t_k log{y_k}} $$
+$$这里面，log表示以e为底的自然对数log_e,y_k是神经网络的输出,t_k是正确标签。并且，t_k是使用如下one-hot的方式表示。$$
+[0,0,0,1,0,0,0,0]
+如果计算机判断这个是第四个的，入上方数组表示，并且又输出了一个概率如下 [0.1,0.1,0.4,0.6,0.1,0.1....]
+$$那么计算机就会使用log_{0.6}的到对应的交叉熵是0.51, 如果对应概率是0.1，则对应的交叉熵是2.3左右$$
+ def crosss_entropy_error(y, t): delta = 1e-7 return -np.sum(t*np.log(y + delta)) 用以上的方式即可完成交叉熵的编写，用sum函数的因为输出的是向量，但是其他列都是0.只有一列有数据。</description>
+    </item>
+    
+    <item>
+      <title>OUC流量分析课-记一次中国海洋大学安全课程</title>
+      <link>/post/2019/09/19/ouc/</link>
+      <pubDate>Thu, 19 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/09/19/ouc/</guid>
+      <description>第一题 课程首先教了使用wireshark抓取ping产生的ICMP request 和 reply的包，目的应该是教会大家使用wireshark的过滤条件
+ICMP简介  什么是ICMP： ping 是基于ICMP工作的，全称 Internet Control Message Protocol，就是互联网控制报文协议。网络包在异常复杂的网络环境中传输时，常常会遇到各种各样的问题。当遇到问题的时候，要传出消息来，报告情况，这样才可以调整传输策略。
+ ICMP与ping (from CSDN 讲的非常详细)&amp;lt;&amp;mdash;&amp;ndash;
+第二题 (a) 分析题目提供的流量，解析获得FLAG
+关键就是要一个一个找. (b) 很快发现是flag是一张PNG 将PNG包导出获得FLAG
+(c) 破解WPA加密的WIFI密码 使用命令配合github上的字典，快速破解得到密码
+$ aircrack-ng wifi.pcap -w ~/Desktop/my/Black/字典/fuzzDicts/passwordDict/top500.txt
+$ airdecap-ng -e Blue-Whale -p 12345678 wifi.pcap 指定密码将包解码
+最后在读包过程中，找到FLAG
+愉快的课程就结束了，还是蓝鲸的研究生小姐姐带着做题的，很开心。</description>
+    </item>
+    
+    <item>
+      <title>使用modelsim_ase &#43; flask实现了一个测评沙箱</title>
+      <link>/post/2019/09/02/modelsim-ase-flask/</link>
+      <pubDate>Mon, 02 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/09/02/modelsim-ase-flask/</guid>
+      <description>二话不说先甩上Github连接 Verilog-Judge-USTB
+Verilog-Judge-USTB 来自北京科技大学某小组的一个verilog的评测沙箱，基于Flask编写
+A verilog online judger from USTB, based on Flask-python
+Usage 构建(build)
+git clone https://github.com/dashjay/Verilog-Judge-USTB.git cd Verilog-Judge-USTB docker build . -t verilog-judge 运行(run)
+docker run verilog-judge -v ./modelsim_ase:/root/modelsim_ase -p 33778:5000 Modelsim_ase
+以上是modelsim的下载地址
+MD5 (modelsim_ase.7z) = 69a73347f20b1535db67de68e7dd538d
+size:186M
+解压后大小1.6GB
+ 内部指定的modelsim_ase来自FPGA微软的免费软件Quartus Lite 中的modelsim组件
+docker内部运行的端口是5000，开在外部
+ 测试(test)
+chmod +x test.sh python test.py | python -m json.tool   以下是测试输出
+The following is the test output
+ { &amp;#34;cmpcode&amp;#34;: 1, &amp;#34;cmpresult&amp;#34;: &amp;#34;Start time: 07:46:33 on Sep 02,2019\nvlog top_module.</description>
+    </item>
+    
+    <item>
+      <title>使用Modelsim中的CommandTools 进行仿真</title>
+      <link>/post/2019/07/27/modelsim-commandtools/</link>
+      <pubDate>Sat, 27 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/07/27/modelsim-commandtools/</guid>
+      <description>之前一直使用的是iverilog进行的仿真，生成vvp可执行文件之后运行得到结果 方法如下直接给Makefile
+ all: cmp vvp lxt cmp: iverilog *.v -o tb_top.vvp vvp: vvp tb_top.vvp lxt: cat top.lxt clean: @rm -rf tb_top.vvp tb_top.lxt 有了以上Makefile，将*.v文件和Makefile放在一起，make即可完成相应操作
+但是用这种方式，生成的波形只能使用GTKwave来查看，并且当有一些复杂的情况出现时候，iverilog就无法处理了，所以我们使用Intel提供的免费的Modelsim来完成仿真，仿真资料比较少，全是图形化界面的介绍，道路坎坷。
+第一步：下载全套工具 intel官网下载的lite版本，最小套装 Quartus-lite-18.1.0.625-linux.tar
+第二步：安装 解压之后有一键安装脚本，运行的时候会提示缺库，安装对应的库文件就可以使用了。
+第三步：仿真出波形 1. vlog工具 路径位于intelFPGA_lite/18.1/modelsim_ase/bin/vlog 执行vlog *.v即可对当前目录所有.v文件进行编译操作
+我给了一个模板.v文件
+module top_module( input [3:0] a, input [3:0] b, output reg[7:0] p ); reg [7:0] pv; reg [7:0] ap; integer i; always@(*) begin pv = 8&#39;b00000000; ap = {4&#39;b0000,a}; for(i = 0; i&amp;lt;=3; i=i+1) begin if(b[i]==1) pv = pv + ap; ap = {ap[6:0],1&#39;b0}; end p = pv; end endmodule 运行vlog *.</description>
+    </item>
+    
+    <item>
+      <title>Markdown Guide (modified)</title>
+      <link>/post/2018/08/30/markdown-guide-modified/</link>
+      <pubDate>Thu, 30 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018/08/30/markdown-guide-modified/</guid>
+      <description>An h1 header Paragraphs are separated by a blank line.
+2nd paragraph. Italic, bold, and monospace. Itemized lists look like:
+ this one that one the other one  Note that &amp;mdash; not considering the asterisk &amp;mdash; the actual text content starts at 4-columns in.
+ Block quotes are written like so.
+They can span multiple paragraphs, if you like.
+ Use 3 dashes for an em-dash. Use 2 dashes for ranges (ex.</description>
+    </item>
+    
+    <item>
+      <title>Hello R Markdown</title>
+      <link>/post/2015/07/23/hello-r-markdown/</link>
+      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
+      
+      <guid>/post/2015/07/23/hello-r-markdown/</guid>
+      <description>R Markdown This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
+You can embed an R code chunk like this:
+summary(cars) ## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.98 ## 3rd Qu.</description>
+    </item>
+    
+    <item>
+      <title>Hacker with Bullhorn</title>
+      <link>/post/2012/04/23/hacker-with-horn/</link>
+      <pubDate>Mon, 23 Apr 2012 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2012/04/23/hacker-with-horn/</guid>
+      <description>Hacker with bullhorn: &amp;ldquo;Save your money! Accept one of our free tanks! It is invulnerable, and can drive across rocks and swamps at ninety miles an hour while getting a hundred miles to the gallon!&amp;rdquo;
+Prospective station wagon buyer: &amp;ldquo;I know what you say is true&amp;hellip;but&amp;hellip;er&amp;hellip;I don&#39;t know how to maintain a tank!&amp;rdquo;
+Bullhorn: &amp;ldquo;You don&#39;t know how to maintain a station wagon either!&amp;rdquo;
+Buyer: &amp;ldquo;But this dealership has mechanics on staff.</description>
+    </item>
+    
+    <item>
+      <title>Command Line Awesomeness</title>
+      <link>/post/2012/03/12/command-line-awesomeness/</link>
+      <pubDate>Mon, 12 Mar 2012 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2012/03/12/command-line-awesomeness/</guid>
+      <description>This crud is called HTML (HyperText Markup Language) and it is basically a very simple programming language instructing your web browser how to draw a page on a screen. Anyone can learn HTML and many people do. The important thing is that no matter what splendid multimedia web pages they might represent, HTML files are just telegrams.
+ When Ronald Reagan was a radio announcer, he used to call baseball games by reading the terse descriptions that trickled in over the telegraph wire and were printed out on a paper tape.</description>
+    </item>
+    
+    <item>
+      <title>Juicy Code</title>
+      <link>/post/2012/01/23/juicy-code/</link>
+      <pubDate>Mon, 23 Jan 2012 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2012/01/23/juicy-code/</guid>
+      <description>Check out this JUICY! code:
+def with_value_from_database(value) self.class.from_database(name, value, type) end def with_cast_value(value) self.class.with_cast_value(name, value, type) end def with_type(type) if changed_in_place? with_value_from_user(value).with_type(type) else self.class.new(name, value_before_type_cast, type, original_attribute) end end </description>
+    </item>
+    
+  </channel>
+</rss>

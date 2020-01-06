@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How To Understand Cross Entropy | Dashjay&#39;s</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="/css/theme-override.css">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.css" integrity="sha384-D+9gmBxUQogRLqvARvNLmA9hS2x//eK1FhVb9PiU86gmcrBrJAQT8okdJ4LMp2uv" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.js" integrity="sha384-483A6DwYfKeDa0Q52fJmxFXkcPCFfnXMoXblOkJ4JcA8zATN6Tm78UNL72AKk+0O" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/contrib/auto-render.min.js" integrity="sha384-yACMu8JWxKzSp/C1YV86pzGiQ/l1YUfE8oPuahJQxzehAjEt2GiQuy/BIvl9KyeF" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body);
+        });
+    </script>
+
+<header>
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">/home/dashjay&#39;s</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">~/home</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">~/categories</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/subscribe</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">How To Understand Cross Entropy</span></h1>
+<h2 class="author">dashjay</h2>
+<h2 class="date">2019/11/11</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/math">math</a> <a href="/categories/data-science">data science</a> 
+  
+  
+  
+  
+</p>
+</div>
+
+
+
+<main>
+<h2 id="heading">机缘巧合看到交叉熵之后觉得非常神奇</h2>
+<p>反复看代码没搞懂在干什么，因此找了本机器学习的书希望能够理解这个玩意儿</p>
+<blockquote>
+<p>除了均方误差之外，交叉熵误差也被用于损失函数，公式如下</p>
+</blockquote>
+<p>$$
+E = - \sum_k{t_k log{y_k}}
+$$</p>
+<p>$$这里面，log表示以e为底的自然对数log_e,y_k是神经网络的输出,t_k是正确标签。并且，t_k是使用如下one-hot的方式表示。$$</p>
+<p><code>[0,0,0,1,0,0,0,0]</code></p>
+<p>如果计算机判断这个是第四个的，入上方数组表示，并且又输出了一个概率如下
+<code>[0.1,0.1,0.4,0.6,0.1,0.1....]</code></p>
+<p>$$那么计算机就会使用log_{0.6}的到对应的交叉熵是0.51, 如果对应概率是0.1，则对应的交叉熵是2.3左右$$</p>
+<pre><code>
+def crosss_entropy_error(y, t):
+
+    delta = 1e-7
+    return -np.sum(t*np.log(y + delta))
+
+
+</code></pre><p>用以上的方式即可完成交叉熵的编写，用sum函数的因为输出的是向量，但是其他列都是0.只有一列有数据。</p>
+
+</main>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Open-Source | <a href="https://github.com/goodroot/hugo-classic">Github</a>
+      
+    </footer>
+  </body>
+</html>
+

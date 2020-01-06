@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>aircrack-ng on Dashjay&#39;s</title>
+    <link>/tags/aircrack-ng/</link>
+    <description>Recent content in aircrack-ng on Dashjay&#39;s</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 19 Sep 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/aircrack-ng/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>OUC流量分析课-记一次中国海洋大学安全课程</title>
+      <link>/post/2019/09/19/ouc/</link>
+      <pubDate>Thu, 19 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/09/19/ouc/</guid>
+      <description>第一题 课程首先教了使用wireshark抓取ping产生的ICMP request 和 reply的包，目的应该是教会大家使用wireshark的过滤条件
+ICMP简介  什么是ICMP： ping 是基于ICMP工作的，全称 Internet Control Message Protocol，就是互联网控制报文协议。网络包在异常复杂的网络环境中传输时，常常会遇到各种各样的问题。当遇到问题的时候，要传出消息来，报告情况，这样才可以调整传输策略。
+ ICMP与ping (from CSDN 讲的非常详细)&amp;lt;&amp;mdash;&amp;ndash;
+第二题 (a) 分析题目提供的流量，解析获得FLAG
+关键就是要一个一个找. (b) 很快发现是flag是一张PNG 将PNG包导出获得FLAG
+(c) 破解WPA加密的WIFI密码 使用命令配合github上的字典，快速破解得到密码
+$ aircrack-ng wifi.pcap -w ~/Desktop/my/Black/字典/fuzzDicts/passwordDict/top500.txt
+$ airdecap-ng -e Blue-Whale -p 12345678 wifi.pcap 指定密码将包解码
+最后在读包过程中，找到FLAG
+愉快的课程就结束了，还是蓝鲸的研究生小姐姐带着做题的，很开心。</description>
+    </item>
+    
+  </channel>
+</rss>
