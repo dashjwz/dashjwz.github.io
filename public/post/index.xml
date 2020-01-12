@@ -6,10 +6,21 @@
     <description>Recent content in Posts on Dashjay&#39;s</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 19 Dec 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 12 Jan 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>golang下map的性能分析</title>
+      <link>/post/2020/01/12/golang-map/</link>
+      <pubDate>Sun, 12 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/01/12/golang-map/</guid>
+      <description>golang 中 map 性能优化[低阶] 简单介绍 golang 中的 build-in 的 map 这个 map 是非线程安全的，但是也是最常用的一个家伙。 为了测试多个 map 的性能我写了个接口 Map
+type Map interface { Set(key interface{}, val interface{}) Get(key interface{}) (interface{}, bool) Del(key interface{}) } 然后这是封装的普通的 map
+type OriginMap struct { m map[interface{}]interface{} } func NewOriginMap() *OriginMap { return &amp;amp;OriginMap{m: make(map[interface{}]interface{})} } func (o *OriginMap) Get(key interface{}) (interface{}, bool) { v, ok := o.m[key] return v, ok } func (o *OriginMap) Set(key interface{}, value interface{}) { o.</description>
+    </item>
     
     <item>
       <title>2019-12-19周报 - MongoDB大发现</title>

@@ -80,9 +80,9 @@
 
 <main>
 <p>[toc]</p>
-<h2 id="4">报告4</h2>
+<h2 id="报告4">报告4</h2>
 <p>选择产品：Radare2取证工具</p>
-<h4 id="heading">工具介绍</h4>
+<h4 id="工具介绍">工具介绍</h4>
 <p><a href="https://github.com/radare/radare2"><strong>Radare</strong></a>是一个取证工具以及可编写脚本的命令行十六进制编辑器，可以打开磁盘文件、支持分析二进制、反汇编代码、调试程序以及连接到远程gdb服务服务器的功能，我记得我高中的时候这工具曾进过Github TOP 30，但是由于各种原因，我们平时都使用GDB，也就忽略了这个工具，看到它被定义为取证工具的时候我有点好奇，什么是计算机取证&hellip;&hellip;..下面贴一下man手册中r2的描述</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">
 RADARE2<span style="color:#f92672">(</span>1<span style="color:#f92672">)</span>                BSD General Commands Manual               RADARE2<span style="color:#f92672">(</span>1<span style="color:#f92672">)</span>
@@ -90,10 +90,10 @@ RADARE2<span style="color:#f92672">(</span>1<span style="color:#f92672">)</span>
 NAME
      radare2 -- Advanced commandline hexadecimal editor, disassembler and
      debugger
-</code></pre></div><h4 id="heading-1">功能测试</h4>
+</code></pre></div><h4 id="功能测试">功能测试</h4>
 <p>众所周知GDB可以运行时（runtime）分析，但是R2只是一个静态分析的软件，让我来看看他有多强大，先分析一小段代码看看。</p>
 <p>这个软件集成了许多小工具，看来平时写python小工具的时代结束了，这么多附带的小工具我来介绍下。</p>
-<h5 id="rax2-----------">rax2 &mdash;&mdash;&mdash;&gt; 用于数值转换</h5>
+<h5 id="rax2-----------用于数值转换">rax2 &mdash;&mdash;&mdash;&gt; 用于数值转换</h5>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$rax2 -s <span style="color:#ae81ff">414141</span>
 AAAA%
 </code></pre></div><p>看下man手册介绍</p>
@@ -107,8 +107,8 @@ DESCRIPTION
      
      This command allows you to convert values between positive and negative integer, float, octal, binary and hexadecimal values.
 </code></pre><p>这个小工具可以正负，整数，浮点数，十进制，二进制，十六进制等之间相互转换。</p>
-<h5 id="rasm2---------">rasm2 &mdash;&mdash;-&gt; 反汇编和汇编</h5>
-<h5 id="rabin2---------">rabin2 &mdash;&mdash;-&gt; 查看文件格式(其实我就只是用来看字符串)</h5>
+<h5 id="rasm2---------反汇编和汇编">rasm2 &mdash;&mdash;-&gt; 反汇编和汇编</h5>
+<h5 id="rabin2---------查看文件格式其实我就只是用来看字符串">rabin2 &mdash;&mdash;-&gt; 查看文件格式(其实我就只是用来看字符串)</h5>
 <p>有时候用这种方法可以快速获得flag，我说的是签到题。</p>
 <p>以下是使用命令查看二进制文件中的字符串</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#ae81ff">2017</span> ◯ : rabin2 -zz forkc | grep <span style="color:#e6db74">&#34;TEXT.&#34;</span>
@@ -117,9 +117,9 @@ DESCRIPTION
 <span style="color:#ae81ff">024</span> 0x00000f8a 0x100000f8a  <span style="color:#ae81ff">11</span>  <span style="color:#ae81ff">12</span> <span style="color:#f92672">(</span>3.__TEXT.__cstring<span style="color:#f92672">)</span> ascii fork failed
 <span style="color:#ae81ff">025</span> 0x00000f96 0x100000f96   <span style="color:#ae81ff">7</span>   <span style="color:#ae81ff">8</span> <span style="color:#f92672">(</span>3.__TEXT.__cstring<span style="color:#f92672">)</span> ascii /bin/ps
 <span style="color:#ae81ff">026</span> 0x00000fa1 0x100000fa1  <span style="color:#ae81ff">14</span>  <span style="color:#ae81ff">15</span> <span style="color:#f92672">(</span>3.__TEXT.__cstring<span style="color:#f92672">)</span> ascii child complete
-</code></pre></div><h5 id="radiff2---------diff">radiff2 &mdash;&mdash;&gt; 对文件进行 diff</h5>
-<h5 id="ragg2ragg2">ragg2/ragg2�cc &mdash;&mdash;&gt; 用于更方便的生成shellcode</h5>
-<h5 id="rahash2---------hash">rahash2 &mdash;&mdash;&gt; 各种密码算法， hash算法</h5>
+</code></pre></div><h5 id="radiff2--------对文件进行-diff">radiff2 &mdash;&mdash;&gt; 对文件进行 diff</h5>
+<h5 id="ragg2ragg2cc--------用于更方便的生成shellcode">ragg2/ragg2�cc &mdash;&mdash;&gt; 用于更方便的生成shellcode</h5>
+<h5 id="rahash2--------各种密码算法-hash算法">rahash2 &mdash;&mdash;&gt; 各种密码算法， hash算法</h5>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$rahash2 -s I_LOVE_OUC -j
 <span style="color:#f92672">{</span><span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;sha256&#34;</span>,<span style="color:#e6db74">&#34;hash&#34;</span>:<span style="color:#e6db74">&#34;0417b096e02a7c452bd7e9d0b4ff0b3322edf4b4b8e3eb434a9d9a072aa1c21c&#34;</span><span style="color:#f92672">}</span>%
 </code></pre></div><p>以上工具都是他附带的一些工具，最主要的程序叫做Radare2，是一个反汇编，的静态分析的神器。使用这个工具的原因一方面是自己能力不足，另一方面是CTF做题真的是来不及，使用这个程序可以大大的提高我在做题的时候的的速度和正确性</p>

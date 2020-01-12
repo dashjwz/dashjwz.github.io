@@ -81,16 +81,16 @@
 
 
 <main>
-<h1 id="heading">第一题</h1>
+<h1 id="第一题">第一题</h1>
 <p>课程首先教了使用<code>wireshark</code>抓取<code>ping</code>产生的<code>ICMP</code> <code>request</code> 和 <code>reply</code>的包，目的应该是教会大家使用<code>wireshark</code>的过滤条件</p>
 <!-- raw HTML omitted -->
-<h4 id="icmp">ICMP简介</h4>
+<h4 id="icmp简介">ICMP简介</h4>
 <blockquote>
 <p>什么是ICMP： ping 是基于ICMP工作的，全称 <code>Internet Control Message Protocol</code>，就是互联网控制报文协议。网络包在异常复杂的网络环境中传输时，常常会遇到各种各样的问题。当遇到问题的时候，要传出消息来，报告情况，这样才可以调整传输策略。</p>
 </blockquote>
 <p><img src="https://img-blog.csdn.net/20180611011134623?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hpYW9rdW56aGFuZw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt=""></p>
 <p><a href="https://blog.csdn.net/xiaokunzhang/article/details/80646662">ICMP与ping (from CSDN 讲的非常详细)&lt;&mdash;&ndash;</a></p>
-<h1 id="heading-1">第二题</h1>
+<h1 id="第二题">第二题</h1>
 <h2 id="a">(a)</h2>
 <p>分析题目提供的流量，解析获得FLAG</p>
 <p>关键就是要一个一个找.
@@ -100,7 +100,7 @@
 <p>很快发现是flag是一张PNG
 <!-- raw HTML omitted --></p>
 <p>将PNG包导出获得FLAG</p>
-<h2 id="c-wpawifi">(c) 破解WPA加密的WIFI密码</h2>
+<h2 id="c-破解wpa加密的wifi密码">(c) 破解WPA加密的WIFI密码</h2>
 <p>使用命令配合github上的字典，快速破解得到密码</p>
 <p><code>$ aircrack-ng wifi.pcap -w ~/Desktop/my/Black/字典/fuzzDicts/passwordDict/top500.txt</code></p>
 <!-- raw HTML omitted -->

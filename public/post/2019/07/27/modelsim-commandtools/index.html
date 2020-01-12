@@ -99,13 +99,13 @@ clean:
 	@rm -rf tb_top.vvp tb_top.lxt
 </code></pre><p>有了以上<code>Makefile</code>，将<code>*.v</code>文件和<code>Makefile</code>放在一起，make即可完成相应操作</p>
 <p>但是用这种方式，生成的波形只能使用GTKwave来查看，并且当有一些复杂的情况出现时候，iverilog就无法处理了，所以我们使用Intel提供的免费的Modelsim来完成仿真，仿真资料比较少，全是图形化界面的介绍，道路坎坷。</p>
-<h3 id="heading">第一步：下载全套工具</h3>
+<h3 id="第一步下载全套工具">第一步：下载全套工具</h3>
 <p>intel官网下载的lite版本，最小套装
 <code>Quartus-lite-18.1.0.625-linux.tar</code></p>
-<h3 id="heading-1">第二步：安装</h3>
+<h3 id="第二步安装">第二步：安装</h3>
 <p>解压之后有一键安装脚本，运行的时候会提示缺库，安装对应的库文件就可以使用了。</p>
-<h3 id="heading-2">第三步：仿真出波形</h3>
-<h4 id="1-vlog">1. vlog工具</h4>
+<h3 id="第三步仿真出波形">第三步：仿真出波形</h3>
+<h4 id="1-vlog工具">1. vlog工具</h4>
 <p>路径位于<code>intelFPGA_lite/18.1/modelsim_ase/bin/vlog</code>
 执行<code>vlog *.v</code>即可对当前目录所有<code>.v</code>文件进行编译操作</p>
 <p>我给了一个模板<code>.v</code>文件</p>
@@ -133,7 +133,7 @@ clean:
 	end
 endmodule
 </code></pre><p>运行<code>vlog *.v</code>命令即可在当前目录下生成一个work文件夹，里面有一些编译的成果，不过不用太在意文件的具体内容。</p>
-<h4 id="2vsim">2.使用vsim</h4>
+<h4 id="2使用vsim">2.使用vsim</h4>
 <p>命令是 <code>vsim -c -do test.do top_module</code>
 这个test.do文件里面的内容有哪些呢？</p>
 <pre><code>&gt; cat test.do

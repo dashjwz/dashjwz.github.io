@@ -86,7 +86,7 @@
 <p>但是作为普通的穷苦人民，在上面催你的时候，很难静下新来，慢慢的打开vscode去一行一行的看，比如你现在可能就是在火急火燎的想在知乎上寻求一个解决方案。</p>
 <p>先说一下我的使用场景。我的场景是这样：</p>
 <p>用户会登陆软件后，需要一些认证方法，连接上socket，然后会进行高速传输，比如消息、群消息、交易拍卖、其他等等一系列消息，主体就是用户，客体是其他用户或者服务器。</p>
-<h2 id="heading"><strong>架构</strong></h2>
+<h2 id="架构"><strong>架构</strong></h2>
 <p>我现对整个项目架构描述一下</p>
 <p><img src="https://pic3.zhimg.com/80/v2-f064e3332e066c5ec3a41331ffe0e302_hd.jpg" alt="img"></p>
 <p>先简述一下Hub的设计，总的一个Hub包含Client这样一个map用来储存连接信息，然后每个连接有一个Reader和一个Write来从客户端读取和写入客户端。</p>
@@ -99,7 +99,7 @@
 </blockquote>
 <p>④. 注销，一旦客户端退出或者网络中断等异常，就会出现断开。</p>
 <p>好了讲了整个东西架构，让我们来看看怎么实现的把，showcode时间到了。</p>
-<h2 id="heading-1"><strong>实现</strong></h2>
+<h2 id="实现"><strong>实现</strong></h2>
 <p>首先，让我们来看看hub的结构吧，说结构还真的就是结构</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// 整个项目的交流系统，由clients和各种不同的chan组成，
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Hub</span> <span style="color:#66d9ef">struct</span> {

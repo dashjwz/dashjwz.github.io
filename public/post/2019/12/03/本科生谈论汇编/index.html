@@ -102,13 +102,13 @@
 <p>- SICP</p>
 <p>曲老师大为赞赏了这本书!!!</p>
 <hr>
-<h2 id="heading">汇编基础</h2>
-<h3 id="heading-1">闲谈</h3>
+<h2 id="汇编基础">汇编基础</h2>
+<h3 id="闲谈">闲谈</h3>
 <p><strong>汇编</strong>是逆向工程的基础,许多人都希望能够破解软件,制作游戏外挂,不花钱冲会员等等,这都属于逆向工程的范畴.逆向工程就是在只有二进制文件的时候,我通过反汇编的手段来从二进制文件获得汇编代码,进而对汇编代码进行反编译得到类C的高级语言,以辅助我们了解程序逻辑,挖掘程序漏洞.</p>
 <p>同时,逆向工程是学习C/C++最好的途径.C系语言本就是为了开发Unix而生,因此他完美的契合Unix生态,因此在Linux下你可以轻易的获得一个程序的指令码(opcode),汇编代码,以及未链接的目标文件.而你学到现在可能都不知道main函数有三个参数,为什么main函数一定要写<code>return 0;</code>(虽然你不写,但这是十分差劲的习惯).只有通过阅读汇编代码你才能真正理解程序的运行原理,你才能真正的理解编译的的高明之处,你才能真正领略到前人的伟大智慧.我强烈建议同学们安装ubuntu18.04虚拟机进行实验,这样你才能获得最好的体验.</p>
 <p>我知道现在流行一种歪风邪气,由于互联网市场膨胀,资本大量流入,大量公司需求网站开发与移动端开发.因此一些学生急功近利,认为自己会写几行php,套个框架,api倒背如流,就算编程大牛了.认为自己会写几行python java,调一调库,用一用flask spring搭个网站,整天拿一些现有的库高谈扩论,写一些业务逻辑,搞几个微信小程序就算是高级程序员了.反而嘲笑C/C++老掉牙,内心浮躁而不愿了解底层,这本身就是一种自欺欺人.多数人由于畏难心理而拒绝C++,只推崇语法糖更加简单的python.作为计算机科学研究人员,我们决不能满足于只写一些应用层逻辑,只有真正了解了计算机的细节,我们才能成为大师,否则你与专科培训班的学生有什么区别.</p>
 <p>但是，我其实就是上方这段说的这种人，就这样吧，逃。</p>
-<h2 id="hello-world">从Hello_world开始</h2>
+<h2 id="从hello_world开始">从Hello_world开始</h2>
 <p>你向家里的弟弟妹妹炫耀你的编程技巧时,你可能写过无数次Hello_world来骗他们了,也许你自认为对它十分熟悉,下面我们从头看看到底发生了什么. 首先你会熟练的写一个hello.c:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#</span><span style="color:#75715e">include</span><span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>argv[], <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>envp[]){
@@ -139,7 +139,7 @@
 
 Hello World!#
 </code></pre></div><p>到此为止我们已经稍微了解了Hello_world,当学弟学妹在你面前吹牛的时候,你就可以问他:你知道Hello_world有多复杂吗?</p>
-<h3 id="heading-2">汇编风格</h3>
+<h3 id="汇编风格">汇编风格</h3>
 <p>从传统上来说,汇编有两种风格,一种是AT&amp;T风格,一种是Intel风格.AT&amp;T是Linux默认格式,而Intel则是微软默认格式.两种风格没有好坏之分,下面我们介绍一下他们的区别.我们还是以一个程序为例,首先我们写一个mstore.c文件如下:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">long</span> <span style="color:#a6e22e">mult2</span>(<span style="color:#66d9ef">long</span>, <span style="color:#66d9ef">long</span>);
 
@@ -229,7 +229,7 @@ ret
 <li>这里又要强调一下,有一个错误观点:许多人认为函数没有返回值就不需要返回.这个观点是极端错误的.返回的真正意义是:当前被调用函数(called function)执行结束后,回到上层调用函数(callee function)的过程.而返回值仅仅是函数向外层传递出的结果,函数会把想要传递出的结果在返回之前放入%rax寄存器,这个值就叫返回值.</li>
 <li>实际上<code>ret</code>等价于<code>pop %rip</code> 这里很重要,后文会详细说明.</li>
 </ul>
-<h3 id="heading-3">关于常用寄存器介绍</h3>
+<h3 id="关于常用寄存器介绍">关于常用寄存器介绍</h3>
 <p>cpu的一切活动都是基于寄存器的,你可以把寄存器理解为变量,函数运行所产生的中间变量优先使用寄存器存储,若寄存器存不下则存入内存即栈中,或者用户主动选择分配一段内存即在堆区分配内存用于存储数据.</p>
 <p>先给大家一张寄存器的图:</p>
 <p><img src="https://pic2.zhimg.com/80/v2-7d4dceb212e7df87382329f2dcc876a1_hd.jpg" alt="img"></p>
@@ -272,7 +272,7 @@ ret
 在Intel CPU中，寄存器BP(EBP)用作帧指针。在Motorola CPU中，除A7(堆栈指针SP)外的任何地址寄存器都可用作FP。当堆栈向下(低地址)增长时，以FP地址为基准，函数参数的偏移量是正值，而局部变量的偏移量是负值。</p>
 <p>请同学们务必记牢我上面提到的寄存器的作用,都是英文缩写,不难记.</p>
 </blockquote>
-<h3 id="heading-4">常用指令</h3>
+<h3 id="常用指令">常用指令</h3>
 <p>基本的指令其实没有几条,上面已经介绍不少了,我们再介绍几个常用的就可以开始实战了,下面我们看个例子:</p>
 <p><img src="https://pic4.zhimg.com/80/v2-133acf2beb4dc9f5e9609865d96ae09f_hd.jpg" alt="img"></p>
 <p>首先可以告诉大家这个程序是有严重漏洞的,可以导致系统被&quot;get shell&rdquo;(就是说拿到最高控制权限啦).</p>
@@ -333,7 +333,7 @@ ret
 <p>放一下上面那段程序的AT&amp;T代码:</p>
 <p><img src="https://pic3.zhimg.com/80/v2-68c00bc34d65df7ca7391e380c3b8e22_hd.jpg" alt="img"></p>
 <p>接下来我们进行重点讲解,函数调用时栈的构造与内存变化及传参方式.</p>
-<h3 id="heading-5">函数调用时栈的构造</h3>
+<h3 id="函数调用时栈的构造">函数调用时栈的构造</h3>
 <p>程序本身就是各种函数的组合,因此了解函数的运行原理极为重要,这一部分是我们日后实施攻击的关键.</p>
 <ol>
 <li>关于寄存器使用的约定:</li>
@@ -534,22 +534,22 @@ ret
 </blockquote>
 <p>到这里,我知道的关于函数调用栈的有关东西已经差不多讲完了,心态先别崩,最难的部分已经结束了,下面开始最有意思的部分.</p>
 <hr>
-<h3 id="heading-6">缓冲区溢出原理</h3>
+<h3 id="缓冲区溢出原理">缓冲区溢出原理</h3>
 <p>缓冲区说的通俗一点就是程序在运行时,可供使用的一部分内存.比如说stack和heap,还有一些存储常量的内存区域,比如bss段(bss segment)等等.下面我们来介绍一下最简单最经典的栈溢出(Stack Overflow).</p>
-<h3 id="heading-7">环境搭建</h3>
+<h3 id="环境搭建">环境搭建</h3>
 <p>在linux下搭建漏洞利用的环境十分简单,只需要如下几个命令:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">#有需求者自行换源
 sudo apt-get update &amp;&amp; apt-get upgrade
 sudo apt-get install build-essential gcc g++ make python-pip
 pip install pwntools
 </code></pre></div><p>如果缺啥库请自行百度安装</p>
-<h3 id="heading-8">栈溢出原理</h3>
+<h3 id="栈溢出原理">栈溢出原理</h3>
 <p>栈溢出指的是程序向栈中某个变量中写入的字节数超过了这个变量本身所申请的字节数，因而导致与其相邻的栈中的变量的值被改变。这种问题是一种特定的缓冲区溢出漏，类似的还有堆溢出，bss 段溢出等溢出方式。栈溢出漏洞轻则可以使程序崩溃，重则可以使攻击者控制程序执行流程。此外，我们也不难发现，发生栈溢出的基本前提是</p>
 <ul>
 <li>程序向栈上写入数据</li>
 <li>写入的数据长度没有被良好的控制</li>
 </ul>
-<h3 id="heading-9">举个栗子</h3>
+<h3 id="举个栗子">举个栗子</h3>
 <p>最经典的栈溢出利用是覆盖程序的返回地址,使其返回到攻击者想要的地址,<strong>需要确保这个地址所在的段有可执行权限</strong>,即权限为(&ndash;X)</p>
 <blockquote>
 <p>注:
@@ -965,7 +965,7 @@ sh<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74"></spa
 sh<span style="color:#f92672">.</span>interactive()
 </code></pre></div><p>现在你已经稍微入点高级编程门了.</p>
 <hr>
-<h3 id="os">关于作者及作者内心os</h3>
+<h3 id="关于作者及作者内心os">关于作者及作者内心os</h3>
 <p>当你读到这段话的时候&hellip;十有八九是前面读不下去了,直接跳到最后看看还有多少&hellip;</p>
 <p>我还是要讲几句鼓励你的话:</p>
 <p>加油,你真棒!</p>
